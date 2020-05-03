@@ -1,0 +1,18 @@
+{
+	"name": "fabled-world",
+	"authors": [
+		"Mistery Man"
+	],
+	"copyright": "Copyright © 2020, Mistery Man",
+	"description": "A terrain generator for Zylann's Voxel mdoule for Godot using GDNative",
+    "license": "mit",
+	
+	"targetType": "dynamicLibrary",
+	"targetPath": "bin",
+	"dependencies": {
+		"godot-d": {"path": "godot-d"}
+	},
+	"preGenerateCommands": [
+		"dub run godot-d:pregenerate"
+	]
+}

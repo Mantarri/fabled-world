@@ -1,0 +1,14 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="fabled_world"
+reloadable=true
+
+[entry]
+
+X11.64="res://modules/world/fabled-world/bin/libfabled-world.so"
+
+[dependencies]
+
+X11.64=[  ]

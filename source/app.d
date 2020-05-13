@@ -26,33 +26,38 @@ class CustomGenerator : GodotScript!VoxelGenerator{
     /// Noise for generator
     @Property Ref!OpenSimplexNoise noise;
 
+    /// List of references to biomes
+    @Property Array biomes;
+
     /// GDScript _init
     @Method void _init(){
         rng = RandomNumberGenerator._new();
     }
 
     /// Get used channels
-    @Method int getUsedChanoldnelsMask(){
-        return 1<<channel;
+    @Method int getUsedChannelsMask(){
+        return (1 << channel);
     }
+
+    this() { biomes = Array.make(); }
 
     /// Generate a block (16x16x16 area)
     @Method void generateBlock(VoxelBuffer voxels, Vector3 origin, int lod){
-        Vector3 voxelSize = voxels.getSize();
-        for(int z; z < to!int(voxelSize.z); z++){
-            for(int x; x < to!int(voxelSize.x); x++){
-                for(int y; y < to!int(voxelSize.y); y++){
-                    int worldX = to!int(origin.x) + (to!int(x) << lod);
-                    int worldY = to!int(origin.y) + (to!int(y) << lod);
-                    int worldZ = to!int(origin.z) + (to!int(z) << lod);
+        for(int z; z < to!int(voxels.getSizeZ()); z++){
+            for(int x; x < to!int(voxels.getSizeX()); x++){
+                for(int y; y < to!int(voxels.getSizeY()); y++){
+                    float worldX = origin.x + (x << lod);
+                    float worldY = origin.y + (y << lod);
+                    float worldZ = origin.z + (z << lod);
 
-                    float n = noise.getNoise3d(worldX, worldY, worldZ);
-                    float d = n * noise.period;
-
-                    if(d < 0){
-                        voxels.setVoxel(1, x, y, z, VoxelBuffer.Constants.channelType);
+                    float shapedNoise = noise.getNoise3d(worldX, worldY, worldZ);
+                    float shapedNoiseUse = shapedNoise * noise.period;
+                    
+                    if(shapedNoiseUse < 0 && worldY < 256){
+                        voxels.setVoxel(1, to!int(x), to!int(y), to!int(z), channel);
+                    }else if(worldY <= 0){
+                        voxels.setVoxel(1, to!int(x), to!int(y), to!int(z), channel);
                     }
-
                 }
             }
         }

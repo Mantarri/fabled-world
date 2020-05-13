@@ -4,3 +4,5 @@
 
 [resource]
 script = ExtResource( 1 )
+channel = 0
+biomes = [  ]
